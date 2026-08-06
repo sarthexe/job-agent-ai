@@ -152,6 +152,19 @@ scripts/
 
 ---
 
+# Configuration
+
+All backend configuration is centralized in `backend/app/shared/config/` and loaded from environment variables (optionally via a `.env` file) using a Pydantic `Settings` class.
+
+* Business logic must never call `os.getenv()` — import the `settings` singleton instead:
+  `from app.shared.config import settings`
+* Settings are grouped by domain (app, security, database, redis, qdrant, ai, playwright, logging, cors) and read from `UPPER_CASE` env vars with a group prefix, e.g. `DATABASE_URL`, `AI_GEMINI_API_KEY`.
+* Copy `backend/.env.example` to `backend/.env` and adjust. Secrets are `SecretStr` fields — always masked in dumps and logs.
+* To add a setting: add a field to the matching group in `backend/app/shared/config/settings.py`, then document it in `backend/.env.example`.
+* `get_settings()` is LRU-cached; the module exports a ready-to-use `settings` singleton.
+
+---
+
 # Roadmap
 
 ## Phase 1
