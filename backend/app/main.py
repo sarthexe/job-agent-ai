@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from app.shared.config import settings
 from app.shared.database import close_engine
 from app.shared.logging import RequestIDMiddleware, get_logger, setup_logging
+from app.system import router as system_router
 
 setup_logging(settings)
 logger = get_logger("app.main")
@@ -29,8 +30,4 @@ app = FastAPI(
     lifespan=lifespan,
 )
 app.add_middleware(RequestIDMiddleware)
-
-
-@app.get("/health")
-async def health_check() -> dict[str, str]:
-    return {"status": "ok", "environment": settings.app.environment}
+app.include_router(system_router)
