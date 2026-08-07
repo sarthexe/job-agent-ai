@@ -163,6 +163,17 @@ All backend configuration is centralized in `backend/app/shared/config/` and loa
 * To add a setting: add a field to the matching group in `backend/app/shared/config/settings.py`, then document it in `backend/.env.example`.
 * `get_settings()` is LRU-cached; the module exports a ready-to-use `settings` singleton.
 
+# Logging
+
+Structured logging via structlog, configured by the centralized settings (`settings.logging`).
+
+* `setup_logging(settings)` must run once at process startup — the FastAPI app in `backend/app/main.py` does this automatically; workers and scripts call it themselves.
+* Get loggers with `from app.shared.logging import get_logger; logger = get_logger(__name__)` — this is the interface all agents, workflows, and workers use. Never use `print()`.
+* Development renders pretty console output; staging/production render JSON lines (override with `LOGGING_FORMAT=text|json`).
+* `RequestIDMiddleware` assigns an `X-Request-ID` per request (honouring incoming values), adds `request_id` to every log line, and emits structured access logs with method, path, status, and duration.
+* Context helpers: `bind()`/`unbind()`/`clear()`, `request_context()` (workers), `get_request_id()`.
+* Timing helpers: `log_execution()` / `timed()` — every record includes `execution_time_ms` and `status` per the project logging rules.
+
 ---
 
 # Roadmap
