@@ -35,3 +35,7 @@ include = ["app*"]
 testpaths = ["tests"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
+
+[tool.ruff.lint.per-file-ignores]
+# FastAPI's canonical dependency-injection idiom.
+"app/**/api.py" = ["B008"]

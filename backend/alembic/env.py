@@ -21,6 +21,9 @@ from alembic import context
 # Make the backend package importable regardless of the invocation cwd.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# Import feature models so their tables are part of Base.metadata and
+# appear in autogenerate. Add future features here.
+import app.job.models  # noqa: F401
 from app.shared.config import get_settings
 from app.shared.database import Base
 
