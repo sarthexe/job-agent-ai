@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.shared.config import settings
+from app.shared.database import close_engine
 from app.shared.logging import RequestIDMiddleware, get_logger, setup_logging
 
 setup_logging(settings)
@@ -17,6 +18,7 @@ async def lifespan(_: FastAPI):
         log_format=settings.logging.format,
     )
     yield
+    await close_engine()
     logger.info("application_stopped")
 
 
