@@ -110,6 +110,9 @@ class AiSettings(BaseSettings):
     voyage_model: str = "voyage-3-large"
     timeout_seconds: float = 60.0
     max_retries: int = 3
+    retry_base_delay_seconds: float = 0.5
+    retry_max_delay_seconds: float = 8.0
+    retry_jitter: bool = True
 
 
 class PlaywrightSettings(BaseSettings):
